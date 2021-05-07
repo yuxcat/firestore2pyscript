@@ -16,3 +16,6 @@ plates_ref = db.collection(u'plates')
 
 for doc in plates_ref.stream():
     print(u'{} => {}'.format(doc.id, doc.to_dict()))
+    
+    #printing specific field on collection
+    print(u'{},{}'.format(doc.id, doc.to_dict().get('your_field_name')))
