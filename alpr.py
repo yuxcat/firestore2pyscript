@@ -10,13 +10,14 @@
 
 	
 
+	
+
 import gi
 import numpy as np
 import cv2
 from openalpr import Alpr
 import sys
 import serial
-import sqlite3
 import subprocess
 import os
 import firebase_admin
@@ -24,6 +25,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import numpy
 import json, ast
+#from datetime import datetime
 
 
 gi.require_version("Gtk", "3.0")
@@ -128,12 +130,9 @@ class ButtonWindow(Gtk.Window):
 			#cv2.setWindowTitle(WINDOW_NAME, 'Gate Camera test')
 			#cv2.resizeWindow(WINDOW_NAME, 256, 256)
 
-			conn = sqlite3.connect('stu3.db')
-			c = conn.cursor()
 					
 			#c.execute('create table pr1 (ID, Name, NP)')
 			
-			conn.commit()	
 
 
 			_frame_number = 0
@@ -174,11 +173,20 @@ class ButtonWindow(Gtk.Window):
 						arduino.write(command)
 						#reachedPos = str(arduino.readline())
 						
-						user_id = plates_ref.where(u'plate', u'==', J).stream()
+						logs_ref = db.collection(u'plates')
+						
+						J = (u'{}'.format(J))
+						J = J.replace(',', '')
+						print(J)
+						
+						user_id = logs_ref.where(u'plate', u'==', J).stream()
 						for doc in user_id:
-							tempinfo = (u'{}'.format(doc.id))
+							print(u'{}'.format(doc.id))
+							
 						now = firestore.SERVER_TIMESTAMP
-						log_ref = db.collection('logs').document(doc.id).set({ 'time' : (now), 'plate': (J)})
+						logz = db.collection('logs').document(doc.id).set({ 'time' : (now), 'plate': (J)})
+							#print(doc.id)
+						print("------END---------")
 
 					else:
 						print("Doesn't Match")
