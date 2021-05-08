@@ -1,7 +1,10 @@
-#this script uses openalpr to detect plates and open a arduino servo motor.
+#this script uses openalpr to detect plates and trigger a arduino servo motor.
 #will only trigger if the plate output similarity is true with firebase firestore data.
+#and if the plates matches, it will query for plate owner's doc.id in another firestore collection and insert a new log collection under doc.id which us userid.
+#this userbility is amazing since we use flutter firebase web/mobile application to iterate user data and manage.
 
 
+	
 	
 
 import gi
@@ -162,10 +165,16 @@ class ButtonWindow(Gtk.Window):
 					if J in arrayload:
 						self.status_log.set_text(str(J))
 						print("Matched")
+
 						arduino = serial.Serial('/dev/ttyACM0', 9600)
 						command = str(85)
 						arduino.write(command)
-						reachedPos = str(arduino.readline())
+						#reachedPos = str(arduino.readline())
+						
+						user_id = plates_ref.where(u'plate', u'==', J).stream()
+						for doc in user_id:
+							tempinfo = (u'{}'.format(doc.id))
+						log_ref = db.collection('logs').document(doc.id).set({ 'time' : 12, 'plate': (J)})
 
 					else:
 						print("Doesn't Match")
