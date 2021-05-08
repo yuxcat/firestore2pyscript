@@ -2,9 +2,12 @@
 #will only trigger if the plate output similarity is true with firebase firestore data.
 #and if the plates matches, it will query for plate owner's doc.id in another firestore collection and insert a new log collection under doc.id which us userid.
 #this userbility is amazing since we use flutter firebase web/mobile application to iterate user data and manage.
+#inserting current time to firestore as a timestamp
 
 
 	
+	
+
 	
 
 import gi
@@ -174,7 +177,8 @@ class ButtonWindow(Gtk.Window):
 						user_id = plates_ref.where(u'plate', u'==', J).stream()
 						for doc in user_id:
 							tempinfo = (u'{}'.format(doc.id))
-						log_ref = db.collection('logs').document(doc.id).set({ 'time' : 12, 'plate': (J)})
+						now = firestore.SERVER_TIMESTAMP
+						log_ref = db.collection('logs').document(doc.id).set({ 'time' : (now), 'plate': (J)})
 
 					else:
 						print("Doesn't Match")
