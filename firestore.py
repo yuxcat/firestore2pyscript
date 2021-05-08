@@ -22,8 +22,10 @@ for doc in plates_ref.stream():
 
     
 #inserting data to firestore using python 2.7
+#getting current time
+now = firestore.SERVER_TIMESTAMP
 
-log_ref = db.collection('logs').document('123').set({ 'time' : 12, 'plate': 1234})
+log_ref = db.collection('logs').document('123').set({ 'time' : (now), 'plate': 1234})
 print(log_ref)
 
 #querying firebase for doc.id / collection
