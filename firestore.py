@@ -25,3 +25,10 @@ for doc in plates_ref.stream():
 
 log_ref = db.collection('logs').document('123').set({ 'time' : 12, 'plate': 1234})
 print(log_ref)
+
+#querying firebase for doc.id / collection
+
+plate_owner = plates_ref.where(u'plate', u'==', u'KL6036').stream()
+
+for doc in plate_owner:
+    print(u'{} => {}'.format(doc.id, doc.to_dict()))
