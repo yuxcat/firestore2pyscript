@@ -19,3 +19,9 @@ for doc in plates_ref.stream():
     
     #printing specific field on collection
     print(u'{},{}'.format(doc.id, doc.to_dict().get('your_field_name')))
+
+    
+#inserting data to firestore using python 2.7
+
+log_ref = db.collection('logs').document('123').set({ 'time' : 12, 'plate': 1234})
+print(log_ref)
