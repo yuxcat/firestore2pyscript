@@ -12,6 +12,8 @@
 
 	
 
+	
+
 import gi
 import numpy as np
 import cv2
@@ -100,7 +102,7 @@ class ButtonWindow(Gtk.Window):
 
 		db = firestore.client()
 		
-		RTSP_SOURCE  = 'rtsp://192.168.8.109:8080/h264_ulaw.sdp'
+		RTSP_SOURCE  = 'rtsp://192.168.8.105:8080/h264_ulaw.sdp'
 		WINDOW_NAME  = 'ALPR System 0.1'
 		FRAME_SKIP   = 30
 		self.source_path.set_text(str(RTSP_SOURCE))
@@ -182,9 +184,10 @@ class ButtonWindow(Gtk.Window):
 						user_id = logs_ref.where(u'plate', u'==', J).stream()
 						for doc in user_id:
 							print(u'{}'.format(doc.id))
+							uName = (u'{},'.format(doc.to_dict().get('name')))
 							
 						now = firestore.SERVER_TIMESTAMP
-						logz = db.collection('logs').document(doc.id).set({ 'time' : (now), 'plate': (J)})
+						logz = db.collection('logs').document(doc.id).set({ 'time' : (now), 'plate': (J), 'name' : (uName)})
 							#print(doc.id)
 						print("------END---------")
 
