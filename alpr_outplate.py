@@ -22,7 +22,7 @@ from gi.repository import Gtk
 
 class ButtonWindow(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="ALPRS 0.2")
+        Gtk.Window.__init__(self, title="ALPRS 0.2 Exit Cam")
         self.set_border_width(10)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_default_size(250, 350)
@@ -38,16 +38,6 @@ class ButtonWindow(Gtk.Window):
         self.outter_box.pack_start(hbox, False, True, 0)
         
         hbox.get_style_context().add_class("linked")
-
-        button = Gtk.Button.new_with_label("Allowed")
-        hbox.add(button)
-        button.connect("clicked", self.on_click_me_clicked)
-        #hbox.pack_start(button, True, True, 0)
-
-        button = Gtk.Button.new_with_mnemonic("_Logs")
-        hbox.add(button)
-        button.connect("clicked", self.on_open_clicked)
-        #hbox.pack_start(button, True, True, 0)
 
         button = Gtk.Button.new_with_mnemonic("_Close")
         hbox.add(button)
@@ -93,7 +83,12 @@ class ButtonWindow(Gtk.Window):
 
 		db = firestore.client()
 		
-		RTSP_SOURCE  = 'rtsp://192.168.8.101:8080/h264_ulaw.sdp'
+		arduino = serial.Serial('/dev/ttyACM0', 9600)
+		command = str(85)
+		arduino.write(command)
+		#reachedPos = str(arduino.readline())
+		
+		RTSP_SOURCE  = 'rtsp://192.168.8.102:8080/h264_ulaw.sdp'
 		WINDOW_NAME  = 'ALPR System 0.1'
 		FRAME_SKIP   = 30
 		self.source_path.set_text(str(RTSP_SOURCE))
@@ -161,10 +156,10 @@ class ButtonWindow(Gtk.Window):
 						self.status_log.set_text(str(J))
 						print("Matched")
 
-						arduino = serial.Serial('/dev/ttyACM1', 9600)
+						arduino = serial.Serial('/dev/ttyACM0', 9600)
 						command = str(85)
 						arduino.write(command)
-						#reachedPos = str(arduino.readline())
+						reachedPos = str(arduino.readline())
 						
 						logs_ref = db.collection(u'plates')
 						
